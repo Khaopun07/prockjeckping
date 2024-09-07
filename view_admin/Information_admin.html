@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Information Form</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="/pubilc/css/navber.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        /* Container for the form and image */
+        .w3-container {
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Form box */
+        .form-box {
+            background-color: #f0f0f0;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 5px solid #0097a7;
+        }
+
+        .form-box label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-box input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .form-box input[type="file"] {
+            margin: 10px 0;
+        }
+
+        .form-box button {
+            padding: 10px 20px;
+            background-color: #0097a7;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .form-box button:hover {
+            background-color: #007b8a;
+        }
+
+        /* Placeholder image */
+        .image-box {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .image-box img {
+            max-width: 100%;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+        }
+
+        .image-box p {
+            font-weight: bold;
+            color: #0097a7;
+        }
+
+        .image-box p span {
+            display: block;
+            color: black;
+            font-weight: normal;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <div class="w3-bar navbar-logo">
+        <!-- Logo on the left -->
+        <div class="w3-bar-item">
+            <img src="/pubilc/img/tsu.png" alt="Logo">
+        </div>
+
+        <!-- Right buttons -->
+        <div class="w3-bar-item navbar-buttons">
+            <a href="#" class="w3-button w3-white w3-border w3-round-large">กิจกรรมแนะแนวทั้งหมด</a>
+            <button class="w3-button w3-red w3-round-large">เพิ่มข้อมูลการไปแนะแนว</button>
+            <!-- <button class="w3-button w3-white w3-border w3-round-large">กิจกรรมแนะนำทั้งหมด</button> -->
+        </div>
+    </div>
+
+<!-- Main container -->
+<div class="w3-container w3-card w3-round-large">
+    <div class="w3-row-padding">
+        <!-- Image section -->
+        <div class="w3-col m4">
+            <div class="image-box">
+                <img src="https://via.placeholder.com/150" alt="School Image">
+                <p>
+                    โรงเรียน: <span>-----------------------</span><br>
+                    วันที่เข้าแนะแนว: <span>-----------------------</span><br>
+                    ช่วงเวลา: <span>-----------------------</span>
+                </p>
+            </div>
+        </div>
+
+        <!-- Form section -->
+        <div class="w3-col m8">
+            <div class="form-box">
+                <h3>กรอกข้อมูล</h3>
+                <form action="/submit-form" method="post" enctype="multipart/form-data">
+                    <label for="date">วันที่เข้าแนะแนว:</label>
+                    <input type="text" id="date" name="date" placeholder="Enter the date">
+
+                    <label for="time">ช่วงเวลา:</label>
+                    <input type="text" id="time" name="time" placeholder="Enter the time">
+
+                    <label for="school_name">ชื่อโรงเรียน:</label>
+                    <input type="text" id="school_name" name="school_name" placeholder="Enter school name">
+
+                    <label for="district">อำเภอที่ตั้งโรงเรียน:</label>
+                    <input type="text" id="district" name="district" placeholder="Enter district">
+
+                    <label for="province">จังหวัดที่ตั้งโรงเรียน:</label>
+                    <input type="text" id="province" name="province" placeholder="Enter province">
+
+                    <label for="num_students">จำนวนนักเรียนที่เข้า:</label>
+                    <input type="text" id="num_students" name="num_students" placeholder="Enter number of students">
+
+                    <label for="contact_name">ชื่อครูผู้ติดต่อ:</label>
+                    <input type="text" id="contact_name" name="contact_name" placeholder="Enter contact teacher's name">
+
+                    <label for="phone">หมายเลขโทรศัพท์:</label>
+                    <input type="text" id="phone" name="phone" placeholder="Enter phone number">
+
+                    <label for="faculty">คณะที่ติดต่อ:</label>
+                    <input type="text" id="faculty" name="faculty" placeholder="Enter contacting faculty">
+
+                    <label for="image">อัพโหลดรูปภาพ:</label>
+                    <input type="file" id="image" name="image">
+
+                    <button type="submit">ตกลง</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
