@@ -1,6 +1,7 @@
 const express = require("express");
 const School = require("../models/School");
-const moment = require('moment');
+const moment = require('moment');//วันที่
+
 //ฟังชัน
 function formatDateToDDMMYYYY(date) {
     if (!date) return null; // Handle cases where date might be null or undefined
@@ -78,7 +79,7 @@ exports.postSchool = async (req, res) => {
         // แปลงวันที่จากรูปแบบ 'DD/MM/YYYY' หรือ 'DD/MM/YYYY' (B.E.) ไปเป็น Date object
         const [day, month, yearBE] = date.split('/');
         const yearAD = parseInt(yearBE) - 543; // แปลงปีพุทธศักราชเป็นคริสต์ศักราช
-        const formattedDate = moment(`${yearAD}-${month}-${day}`, 'DD/MM/YYYY').toDate();
+        const formattedDate = moment(`${yearAD}-${month}-${day}`, 'YYYY-MM-DD').toDate();
 
         //สร้างอ็อบเจกต์ใหม่ของ Product โดยใช้ข้อมูลที่ได้รับจาก req.body. 
         const school = new School({date:formattedDate,startTime,endTime,school_name,district,provinc,student_count,teacher_name,phone_teacher,faculty});
@@ -123,7 +124,7 @@ exports.deleteSchool = async (req, res) => {
         //หากไม่พบผลิตภัณฑ์ฟังก์ชันจะตอบสนองด้วยรหัสสถานะ 404 และวัตถุ JSON ที่มีข้อความ "ไม่พบผลิตภัณฑ์"ฟังก์ชันจะตอบสนองด้วยรหัสสถานะ 404 และวัตถุ JSON ที่มีข้อความ "ไม่พบผลิตภัณฑ์"
         
         await School.findByIdAndDelete(id);//บรรทัดนี้ใช้เมธอดของ Mongoose findByIdAndDeleteเพื่อลบผลิตภัณฑ์ที่มี ID ที่ระบุจากฐานข้อมูล
-        res.status(200).json({ message: 'Product deleted' });//หากการลบสำเร็จ ฟังก์ชันจะตอบกลับด้วยรหัสสถานะ 200
+        res.status(200).json({ message: 'School deleted' });//หากการลบสำเร็จ ฟังก์ชันจะตอบกลับด้วยรหัสสถานะ 200
     } catch (error) {
         res.status(500).json({ message: error.message });
         // หากเกิดข้อผิดพลาดใดๆ ระหว่างการดำเนินการtryบล็อก (เช่น ข้อผิดพลาดของฐานข้อมูล) catchบล็อกจะจับข้อผิดพลาดและตอบสนองด้วยรหัสสถานะ 500 และข้อความแสดงข้อผิดพลาด
