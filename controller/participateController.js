@@ -1,5 +1,5 @@
 const express = require("express");
-const Product = require("../models/participate");
+const Participate = require("../models/participate");
 
 // Get all products
 //ฟังก์ชัน getProduct ถูกส่งออกจากโมดูลนี้เพื่อให้สามารถเข้าถึงจากที่อื่นในแอปพลิเคชัน. ฟังก์ชันนี้เป็นแบบ async ซึ่งหมายความว่าสามารถใช้ await ภายในได้.
@@ -39,10 +39,10 @@ exports.getParticipateID = async (req, res) => {
 exports.postParticipate = async (req, res) => {
     try {
         //ข้อมูลผลิตภัณฑ์ (product_name, product_type, price, และ unit) ถูกดึงมาจาก req.body ซึ่งเป็นเนื้อหาของคำขอ HTTP POST.
-        const { product_name, product_type, price, unit } = req.body;
+        const {name,surname,course,Boarding_point } = req.body;
 
         //สร้างอ็อบเจกต์ใหม่ของ Product โดยใช้ข้อมูลที่ได้รับจาก req.body.
-        const participate = new Participate({ product_name, product_type, price, unit });
+        const participate = new Participate({name,surname,course,Boarding_point });
 
         //ใช้ product.save() เพื่อบันทึกผลิตภัณฑ์ใหม่ลงในฐานข้อมูล.
         const savedParticipate = await participate.save();
