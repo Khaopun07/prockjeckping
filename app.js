@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const app = express();
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
 dotenv.config();//บรรทัดนี้โหลดตัวแปรสภาพแวดล้อมจาก.envไฟล์ลงใน ไฟล์
 mongoose.connect(process.env.MONGO_DB_URL, {}).then(() => {
@@ -11,6 +10,8 @@ mongoose.connect(process.env.MONGO_DB_URL, {}).then(() => {
     console.log('MongoDB connected');
 }).catch(err => console.log(err));
 
+const  participateRoutes = require("./routes/participate");
+app.use("/api/participate", participateRoutes);
 
 const  schoolRoutes = require("./routes/school");
 app.use("/api/school", schoolRoutes);
