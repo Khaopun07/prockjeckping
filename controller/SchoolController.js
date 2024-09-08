@@ -2,7 +2,16 @@ const express = require("express");
 const School = require("../models/School");
 const moment = require('moment');
 
+function formatDateToDDMMYYYY(date) {
+    if (!date) return null; // Handle cases where date might be null or undefined
 
+    const d = new Date(date);
+    const day = String(d.getDate()).padStart(2, '0');
+    const month = String(d.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
+    const year = d.getFullYear();
+
+    return `${day}/${month}/${year}`;
+}
 // Get all products
 //ฟังก์ชัน getProduct ถูกส่งออกจากโมดูลนี้เพื่อให้สามารถเข้าถึงจากที่อื่นในแอปพลิเคชัน. ฟังก์ชันนี้เป็นแบบ async ซึ่งหมายความว่าสามารถใช้ await ภายในได้.
 exports.getSchool = async (req, res) => {
@@ -11,8 +20,15 @@ exports.getSchool = async (req, res) => {
         const schools = await School.find();
         //Product.find() คือคำสั่ง Mongoose ที่ใช้เพื่อดึงข้อมูลทั้งหมดจากคอลเลกชัน Product ในฐานข้อมูล MongoDB.
 
+        // แปลงวันที่ให้เป็นรูปแบบ DD/MM/YYYY
+        const formattedSchools = schools.map(school => {
+            return {
+                ...school.toObject(),
+                date: formatDateToDDMMYYYY(school.date)
+            };
+        });
         // Send the products as JSON with a 200 status
-        res.status(200).json(schools);
+        res.status(200).json(formattedSchools);;
     } catch (error) {
         // Send error message with a 500 status
         res.status(500).json({ message: error.message });
@@ -26,10 +42,16 @@ exports.getSchoolID = async (req, res) => {
         const { id } = req.params;//req.params เป็นอ็อบเจกต์ที่เก็บพารามิเตอร์ที่ถูกส่งมาจาก URL ของการร้องขอ.
         const school = await School.findById(id);//Product.findById(id) คือคำสั่ง Mongoose ที่ใช้ค้นหาผลิตภัณฑ์ในฐานข้อมูล MongoDB โดยใช้ ID ที่ระบุ.
         if (school) {
-            res.status(200).json(school);
+            // แปลงวันที่ให้เป็นรูปแบบ DD/MM/YYYY
+            const formattedSchool = {
+                ...school.toObject(),
+                date: formatDateToDDMMYYYY(school.date)
+            };
+
+            res.status(200).json(formattedSchool);
             //ตั้งสถานะการตอบกลับ HTTP เป็น 200 (OK) เพื่อแสดงว่าการร้องขอประสบความสำเร็จ.
         } else {
-            res.status(404).json({ message: 'Product not found' });
+            res.status(404).json({ message: 'School not found' });
             //ตั้งสถานะการตอบกลับ HTTP เป็น 404 (Not Found) เพื่อแสดงว่าข้อมูลที่ร้องขอไม่สามารถพบได้.
         }
     } catch (error) {//ใช้ catch เพื่อจับข้อผิดพลาดที่อาจเกิดขึ้นในระหว่างการค้นหาผลิตภัณฑ์.
@@ -41,16 +63,14 @@ exports.getSchoolID = async (req, res) => {
 exports.postSchool = async (req, res) => {
     try {
         //ข้อมูลผลิตภัณฑ์ (product_name, product_type, price, และ unit) ถูกดึงมาจาก req.body ซึ่งเป็นเนื้อหาของคำขอ HTTP POST.
-        const {date,time,school_name,district,provinc,student_count,teacher_name,phone_teacher,faculty} = req.body;
+        const {date,startTime, endTime,school_name,district,provinc,student_count,teacher_name,phone_teacher,faculty} = req.body;
 
-        //สร้างอ็อบเจกต์ใหม่ของ Product โดยใช้ข้อมูลที่ได้รับจาก req.body.
-
+       // ตรวจสอบรูปแบบของเวลา
+       const timePattern = /^([01]\d|2[0-3]):([0-5]\d)$/;
+       if (!timePattern.test(startTime) || !timePattern.test(endTime)) {
+            return res.status(400).json({ message: 'Invalid time format. Use HH:MM' });
+       }   
         // ตรวจสอบวันที่ก่อนที่จะใช้
-    if (!date) {
-        return res.status(400).json({ message: 'Date is required' });
-    }
-
- // ตรวจสอบวันที่ก่อนที่จะใช้
         if (!date) {
             return res.status(400).json({ message: 'Date is required' });
         }
@@ -58,10 +78,10 @@ exports.postSchool = async (req, res) => {
         // แปลงวันที่จากรูปแบบ 'DD/MM/YYYY' หรือ 'DD/MM/YYYY' (B.E.) ไปเป็น Date object
         const [day, month, yearBE] = date.split('/');
         const yearAD = parseInt(yearBE) - 543; // แปลงปีพุทธศักราชเป็นคริสต์ศักราช
-        const formattedDate = moment(`${yearAD}-${month}-${day}`, 'YYYY-MM-DD').toDate();
+        const formattedDate = moment(`${yearAD}-${month}-${day}`, 'DD/MM/YYYY').toDate();
 
-                
-        const school = new School({date:formattedDate,time,school_name,district,provinc,student_count,teacher_name,phone_teacher,faculty});
+        //สร้างอ็อบเจกต์ใหม่ของ Product โดยใช้ข้อมูลที่ได้รับจาก req.body. 
+        const school = new School({date:formattedDate,startTime,endTime,school_name,district,provinc,student_count,teacher_name,phone_teacher,faculty});
         
         //ใช้ product.save() เพื่อบันทึกผลิตภัณฑ์ใหม่ลงในฐานข้อมูล.
         const savedSchool = await school.save();
