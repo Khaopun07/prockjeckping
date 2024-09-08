@@ -1,9 +1,9 @@
 const jwt = require("jsonwebtoken");//นำเข้าjsonwebtokenไลบรารีซึ่งใช้ในการสร้างและตรวจสอบโทเค็นเว็บ JSON
 
-function authenticateToken(req, res, next) {//นำเข้าjsonwebtokenไลบรารีซึ่งใช้ในการสร้างและตรวจสอบโทเค็นเว็บ JSON
-    const authHeader = req.headers["authorization"];//มีการส่งHeaderมา
+function adminticateToken(req, res, next) {//นำเข้าjsonwebtokenไลบรารีซึ่งใช้ในการสร้างและตรวจสอบโทเค็นเว็บ JSON
+    const adminHeader = req.headers["adminorization"];//มีการส่งHeaderมา
     //นำเข้าjsonwebtokenไลบรารีซึ่งใช้ในการสร้างและตรวจสอบโทเค็นเว็บ JSON
-    const token = authHeader && authHeader.split(" ")[1];
+    const token = adminHeader && adminHeader.split(" ")[1];
 //รวจสอบว่าAuthorizationส่วนหัวมีอยู่หรือไม่ หากมี ระบบจะแยกค่าส่วนหัวในอักขระช่องว่างและดึงส่วนที่สอง 
 
 
