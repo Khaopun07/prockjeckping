@@ -2,6 +2,7 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");// Corrected from Product to User
+const cors = require('cors'); // นำเข้า cors
 
 
 require('dotenv').config();
